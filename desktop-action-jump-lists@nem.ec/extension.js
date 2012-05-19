@@ -1,4 +1,3 @@
-
 const Clutter = imports.gi.Clutter;
 const Config = imports.misc.config;
 const GLib = imports.gi.GLib;
