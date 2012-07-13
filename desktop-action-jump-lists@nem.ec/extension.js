@@ -99,6 +99,7 @@ function setJumplist (appIconMenu) {
       global.log(params.length);
       if(params){
         appIconMenu._source.app.launch(0, params, -1);
+        // Util.spawn([SSHSEARCH_TERMINAL_APP, '-e', 'ssh -p ' + id.port + ' ' + target]);
         Main.overview.hide();
       }
     }));
@@ -121,14 +122,30 @@ function setJumplist (appIconMenu) {
     let groups = parseDesktopEntry(data);
     let needsSeparator = true;
     
+    let shortcuts = {};
+    // Enables use of Unity's Ayatana shortcuts.
+    if(groups["Desktop Entry"]){
+      let shortcutStr = groups["Desktop Entry"]["X-Ayatana-Desktop-Shortcuts"];
+      if(shortcutStr){
+        let entries = shortcutStr.split(';');
+        for(var i = 0; i < entries.length; i++){
+          shortcuts[entries[i].trim()] = 0;
+        }
+      }
+    }
+    
     for(let name in groups){
-      if(name.indexOf("Desktop Action") == 0){
+      let action = name.match(/(?:Desktop Action\s)(\w+)/);
+      let shortcut = name.match(/(\w+)(?:\sShortcut Group)/);
+      if(action && action[1] ||
+          shortcut && shortcuts.hasOwnProperty(shortcut[1])){
         let event = groups[name];
-        // Check OnlyShowIn and NotShowIn for us.
-        if((event.OnlyShowIn !== undefined && event.OnlyShowIn.indexOf("GNOME") < 0) ||
+        /*** So that we don't have to modify everything when using Unity's Ayatana shortcuts... */
+        /*// Check OnlyShowIn and NotShowIn for us.
+        if(event.OnlyShowIn !== undefined && event.OnlyShowIn.indexOf("GNOME") < 0) ||
           (event.NotShowIn !== undefined && event.NotShowIn.indexOf("GNOME") >= 0)){
           continue;
-        }
+        }*/
         
         if(needsSeparator){
           appIconMenu._appendSeparator();

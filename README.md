@@ -20,11 +20,12 @@ You have multiple options.
 Extra jump lists (if present) will be available upon right-click of an
   application.
 
-## To-Do
+* If Unity jump lists are present in the .desktop file, they will be included
+  in the jump list as well. I've noticed that some of them duplicate the
+  existing shortcut functions (like New Window), but overall it integrates
+  fine.
 
-Implement support for `X-Ayatana-Desktop-Shortcuts` settings, so that
-  current Unity jump lists can be used in Gnome Shell (although they are
-  supposed to be porting those to the standard soon).
+## To-Do
   
 Currently application launching reuses the base application, so additional
   jump lists must use that application when launching (ie. for Chromium
